@@ -5,12 +5,12 @@
 
         let tatzikWords = [];
         let tatzikWordsLen = 0;
+        /* Изменить/Добавить/Удалить рандомное время отправки поста (в миллисекундах): */
         /*let postSendingInterval = [300000, 360000, 420000, 480000, 
                                    540000, 600000, 660000, 720000,
                                    780000, 840000, 900000
                                   ]; //5 мин - 15 мин*/
-        let postSendingInterval = [2000, 3000, 4000
-                                  ];
+        let postSendingInterval = [2000, 3000, 4000];
         let body = document.getElementsByTagName('body')[0];
         let header = document.getElementById('header');
         let butSc = document.createElement('button');
@@ -33,8 +33,8 @@
                 fr.readAsText(this.files[0]);
                 fr.onload =()=>{
                     tatzikWords.push(fr.result.split(','));
-                    tatzikWordsLen = tatzikWords[0].length-1;
-                    console.log(tatzikWords + ' Len: ' + tatzikWordsLen);
+                    tatzikWordsLen = tatzikWords[0].length;
+                    console.log(tatzikWords + ' | Кличество фраз: ' + tatzikWordsLen);
                 }
         }
 
@@ -44,13 +44,18 @@
           return tatzikWords[0][Math.floor(Math.random() * (tatzikWordsLen - 0) + 0)];
         }
 
-        function addScPost(){
+        function getTime(){
+            let dt = new Date();
+            return `${dt.getHours()}:${dt.getMinutes()}:${dt.getSeconds()}`;
+        }
+
+        async function addScPost(){
             let randWord = getRandomWord();
             let rand = postSendingInterval[Math.floor(Math.random() * (postSendingInterval.length - 0) + 0)];
-            console.log('Следующая отправка через: '+rand+ ' миллисекунд. ' + 'Содержимое поста: '+randWord+
-                        ' parentId: '+parseInt($('#discussionPost').attr('data-id'))+' questionAuthorId: '
-                        +parseInt($('.question').attr('data-userId')));
-            $.ajax({
+            console.log('Следующая отправка через: '+rand+ ' миллисекунд. ' +  ' { Содержимое текущего поста: '+randWord+
+                        ', parentId: '+parseInt($('#discussionPost').attr('data-id'))+', questionAuthorId: '
+                        +parseInt($('.question').attr('data-userId'))+ '}');
+            await $.ajax({
               url: 'http://localhost:3000/',
               data: {
                 parentId: parseInt($('#discussionPost').attr('data-id')),
@@ -60,10 +65,10 @@
               method: 'post',
               dataType: 'text',
               success: function (response) {
-                  console.log('Пост успешно добавлен');
+                  console.log(getTime()+' ✅ Пост успешно добавлен.');
               },
               error: function(xhr, ajaxOptions, thrownError){
-                  console.log('Возникла ошибка: ');
+                  console.log(getTime()+' ❌ Возникла ошибка: ');
                   console.log(xhr);
               }
             });
