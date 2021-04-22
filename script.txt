@@ -8,10 +8,10 @@ $.ajax({
    method: 'post',
    dataType: 'json',
    success: function (response) {
-           console.log('Пост успешно добавлен');
+          console.log(getTime()+' ✅ Пост успешно добавлен.');
    },
    error: function(xhr, ajaxOptions, thrownError){
-     console.log('Возникла ошибка: ');
+     console.log(getTime()+' ❌ Возникла ошибка: ');
      console.log(xhr);
    }
 });
