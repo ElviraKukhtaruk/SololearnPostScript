@@ -44,7 +44,7 @@
           return tatzikWords[0][Math.floor(Math.random() * (tatzikWordsLen - 0) + 0)];
         }
 
-        async function addScPost(){
+        function addScPost(){
             let randWord = getRandomWord();
             let rand = postSendingInterval[Math.floor(Math.random() * (postSendingInterval.length - 0) + 0)];
             console.log('Следующая отправка через: '+rand+ ' миллисекунд. ' + 'Содержимое поста: '+randWord+
