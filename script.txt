@@ -1,0 +1,62 @@
+ let tatzikWords = [];
+        let tatzikWordsLen = 0;
+        let postSendingInterval = [300000, 36000, 420000, 480000, 
+                                   540000, 600000, 660000, 72000,
+                                   78000, 840000, 90000
+                                  ]; //5 мин - 15 мин*/
+        let body = document.getElementsByTagName('body')[0];
+        let header = document.getElementById('header');
+        let butSc = document.createElement('button');
+            butSc.id = 'startScript';
+            butSc.textContent = 'Запустить (Только после выбора файла ниже)';
+            butSc.setAttribute('style', 'height: 40px; margin-bottom: 20px; font-size: 20px;');
+            body.insertBefore(butSc, header);
+        let container = document.createElement('div');
+            container.id = 'tatzikDiv';
+            container.setAttribute('style', 'background-color: grey; width: 100%;');
+            body.insertBefore(container, header);
+        let inputFile = document.createElement('input'); 
+            inputFile.type = 'file';
+            inputFile.id = 'inputFile';
+            inputFile.setAttribute('style', 'height: 50px; margin-bottom: 20px; font-size: 20px;');
+            container.appendChild(inputFile);
+        document.getElementById('inputFile').addEventListener('change', readFile);
+        function readFile(){
+            let fr = new FileReader();
+                fr.readAsText(this.files[0]);
+                fr.onload =()=>{
+                    tatzikWords.push(fr.result.split(','));
+                    tatzikWordsLen = tatzikWords[0].length-1;
+                    console.log(tatzikWords + ' Len: ' + tatzikWordsLen);
+                }
+        }
+
+        butSc.addEventListener('click', addScPost);
+        
+        function getRandomWord(){
+          return tatzikWords[0][Math.floor(Math.random() * (tatzikWordsLen - 0) + 0)];
+        }
+
+        async function addScPost(){
+            let randWord = getRandomWord();
+            let rand = postSendingInterval[Math.floor(Math.random() * (11 - 0) + 0)];
+            console.log('Следующая отправка через: '+rand+ ' миллисекунд. ' + 'Содержимое поста: '+randWord);
+            
+        $.ajax({
+            url: '/Discuss/Reply',
+            data: {
+            parentId: parseInt($('#discussionPost').attr('data-id')),
+            message: randWord,
+            questionAuthorId: parseInt($('.question').attr('data-userId'))
+            },
+            method: 'post',
+            dataType: 'json',
+            success: function (response) {
+               console.log('Пост успешно добавлен: '+ response);
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+              console.log('Возникла ошибка: '+ xhr);
+            }
+        });
+        setTimeout(addScPost, rand);
+        }
