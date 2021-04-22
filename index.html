@@ -55,23 +55,24 @@
             console.log('Следующая отправка через: '+rand+ ' миллисекунд. ' +  ' { Содержимое текущего поста: '+randWord+
                         ', parentId: '+parseInt($('#discussionPost').attr('data-id'))+', questionAuthorId: '
                         +parseInt($('.question').attr('data-userId'))+ '}');
+            
             await $.ajax({
-              url: 'http://localhost:3000/',
+              url: '/Discuss/Reply',
               data: {
-                parentId: parseInt($('#discussionPost').attr('data-id')),
-                message: randWord,
-                questionAuthorId: parseInt($('.question').attr('data-userId'))
+               parentId: parseInt($('#discussionPost').attr('data-id')),
+               message: randWord,
+               questionAuthorId: parseInt($('.question').attr('data-userId'))
               },
-              method: 'post',
-              dataType: 'text',
-              success: function (response) {
+             method: 'post',
+             dataType: 'json',
+             success: function (response) {
                   console.log(getTime()+' ✅ Пост успешно добавлен.');
-              },
-              error: function(xhr, ajaxOptions, thrownError){
-                  console.log(getTime()+' ❌ Возникла ошибка: ');
-                  console.log(xhr);
-              }
-            });
+             },
+             error: function(xhr, ajaxOptions, thrownError){
+                 console.log(getTime()+' ❌ Возникла ошибка: ');
+                 console.log(xhr);
+             }
+           });
         setTimeout(addScPost, rand);
         }
         
@@ -89,7 +90,7 @@
 <!--
 
 
-await $.ajax({
+ await $.ajax({
               url: 'http://localhost:3000/',
               data: {
                 parentId: parseInt($('#discussionPost').attr('data-id')),
@@ -99,10 +100,11 @@ await $.ajax({
               method: 'post',
               dataType: 'text',
               success: function (response) {
-                  console.log('Пост успешно добавлен: '+ response);
+                  console.log(getTime()+' ✅ Пост успешно добавлен.');
               },
               error: function(xhr, ajaxOptions, thrownError){
-                  console.log('Возникла ошибка: ' + xhr);
+                  console.log(getTime()+' ❌ Возникла ошибка: ');
+                  console.log(xhr);
               }
             });
 
